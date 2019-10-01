@@ -2,7 +2,6 @@ import numpy as np
 import cv2
 
 
-
 def centerOfMass(frame):
     cx = 0
     cy = 0
@@ -20,14 +19,6 @@ def centerOfMass(frame):
         return (-1, -1)
 
 cap = cv2.VideoCapture('Micro-dance_2_.avi')
-frameWidth = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-frameHeight = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
-background = cv2.imread('finkenau.jpg')
-background = cv2.resize(background, (frameWidth, frameHeight))
-
-
-
 frameCount = 0
 while cap.isOpened():
     ret, frame = cap.read()
@@ -45,15 +36,6 @@ while cap.isOpened():
     thresh = 40
     ret, mask = cv2.threshold(absDiff, thresh, 255, cv2.THRESH_BINARY)
 
-
-    # Anwendung:
-    # Vordergrund vor einen anderen Hintergrund setzen
-    output = background.copy()
-    whitePixels = (mask > 0)
-    output[whitePixels] = frame[whitePixels]
-    cv2.imshow("Kombination", output)
-
-    
     # Schwerpunkt bestimmen
     #(cx, cy) = centerOfMass(mask)
     M = cv2.moments(mask)
@@ -63,7 +45,8 @@ while cap.isOpened():
         # Schwerpunkt zeichnen
         cv2.circle(frame, (cx, cy), 5, (0,0,255), cv2.FILLED)
 
-
+    # Anwendung:
+    # Vordergrund vor einen anderen Hintergrund setzen
 
     cv2.imshow("Video", frame)
     if cv2.waitKey(30) != -1:
